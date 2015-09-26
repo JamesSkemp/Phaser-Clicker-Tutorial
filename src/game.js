@@ -29,6 +29,7 @@ game.state.add('play', {
 		this.game.load.spritesheet('spider', 'assets/allacrost_enemy_sprites/spider.png', 256 / 4, 64, 4);
 		this.game.load.spritesheet('stygian_lizard', 'assets/allacrost_enemy_sprites/stygian_lizard.png', 768 / 4, 192, 4);
 	},
+
 	create: function () {
 		var state = this;
 		// Create a group to hold our related background images.
@@ -105,6 +106,30 @@ game.state.add('play', {
 			strokeThickness: 4
 		}));
 
+		this.dmgTextPool = this.add.group();
+		// Create 50 text objects that we'll use to display damage.
+		var dmgText;
+		for (var d = 0; d < 50; d++) {
+			dmgText = this.add.text(0, 0, '1', {
+				font: '64px Arial Black',
+				fill: '#fff',
+				strokeThickness: 4
+			});
+			// Don't draw them until we need to.
+			dmgText.exists = false;
+			// The text will start where we click and fly off in a random direction, over the course of 1000 ms.
+			dmgText.tween = game.add.tween(dmgText)
+				.to({
+					alpha: 0,
+					y: 100,
+					x: this.game.rnd.integerInRange(100, 700)
+				}, 1000, Phaser.Easing.Cubic.Out);
+			dmgText.tween.onComplete.add(function (text, tween) {
+				text.kill();
+			});
+			this.dmgTextPool.add(dmgText);
+		}
+
 		/*
 		// Location of the image, and in this case the frame to use (zero-based as usual).
 		var skeletonSprite = game.add.sprite(450, 290, 'skeleton', 0);
@@ -112,6 +137,7 @@ game.state.add('play', {
 		skeletonSprite.anchor.setTo(0.5, 0.5);
 		*/
 	},
+
 	render: function () {
 		/*
 		game.debug.text(
@@ -125,6 +151,16 @@ game.state.add('play', {
 	onClickMonster: function (monster, pointer) {
 		// Apply click damage to the monster.
 		this.currentMonster.damage(this.player.clickDmg);
+
+		// Display that damage was dealt.
+		var dmgText = this.dmgTextPool.getFirstExists(false);
+		if (dmgText) {
+			dmgText.text = this.player.clickDmg;
+			dmgText.reset(pointer.positionDown.x, pointer.positionDown.y);
+			dmgText.alpha = 1;
+			dmgText.tween.start();
+		}
+
 		this.monsterHealthText.text = this.currentMonster.alive ? this.currentMonster.health + ' HP' : 'DEAD';
 		/*
 		// Reset the current monster before we move him.
