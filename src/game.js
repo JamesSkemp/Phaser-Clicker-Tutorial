@@ -66,7 +66,7 @@ game.state.add('play', {
 		var monster;
 		monsterData.forEach(function (data) {
 			// Create a sprite for them off scrren.
-			monster = state.monsters.create(1000, state.game.world.centerY, data.image);
+			monster = state.monsters.create(1500, state.game.world.centerY, data.image);
 			// Center sprite anchor.
 			monster.anchor.setTo(0.5);
 			// Reference to the data.
@@ -97,7 +97,7 @@ game.state.add('play', {
 	
 	onClickMonster: function () {
 		// Reset the current monster before we move him.
-		this.currentMonster.position.set(1000, this.game.world.centerY);
+		this.currentMonster.position.set(1500, this.game.world.centerY);
 		// Get another random monster.
 		this.currentMonster = this.monsters.getRandom();
 		this.currentMonster.position.set(this.game.world.centerX + 100, this.game.world.centerY);
