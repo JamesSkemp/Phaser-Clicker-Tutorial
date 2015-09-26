@@ -50,6 +50,13 @@ game.state.add('play', {
 
 		this.game.load.image('dagger', 'assets/496_RPG_icons/W_Dagger002.png');
 		this.game.load.image('swordIcon1', 'assets/496_RPG_icons/S_Sword15.png');
+
+		// Current world level.
+		this.level = 1;
+		// Number of monsters killed in this level.
+		this.levelKills = 0;
+		// Number of monsters that have to be killed before advancing a level.
+		this.levelKillsRequired = 10;
 	},
 
 	create: function () {
@@ -250,12 +257,20 @@ game.state.add('play', {
 		// Spawn a coin.
 		coin = this.coins.getFirstExists(false);
 		coin.reset(this.game.world.centerX + this.game.rnd.integerInRange(-100, 100), this.game.world.centerY);
-		coin.goldValue = 1;
+		coin.goldValue = Math.round(this.level * 1.33);
 		// Automatically collect the coin after 3 seconds.
 		this.game.time.events.add(Phaser.Timer.SECOND * 3, this.onClickCoin, this, coin);
 
+		this.levelKills++;
+
+		if (this.levelKills >= this.levelKillsRequired) {
+			this.level++;
+			this.levelKills = 0;
+		}
+
 		// Get a new monster.
 		this.currentMonster = this.monsters.getRandom();
+		this.currentMonster.maxHealth = Math.ceil(this.currentMonster.details.maxHealth + ((this.level - 1) * 10.6))
 		// Start them off fully healed.
 		this.currentMonster.revive(this.currentMonster.maxHealth);
 	},
