@@ -193,7 +193,7 @@ game.state.add('play', {
 			button.text = button.addChild(state.game.add.text(42, 6, buttonData.name + ': ' + buttonData.level, { font: '16px Arial Black' }));
 			button.details = buttonData;
 			button.costText = button.addChild(state.game.add.text(42, 24, 'Cost: ' + buttonData.cost, { font: '16px Arial Black' }));
-			button.events.onInputDown.add(state.onUpgradeButtonClick, this);
+			button.events.onInputDown.add(state.onUpgradeButtonClick, state);
 			// Add the button to the collection of upgrade buttons.
 			upgradeButtons.addChild(button);
 		});
@@ -280,8 +280,9 @@ game.state.add('play', {
 		if (this.player.gold - button.details.cost >= 0) {
 			this.player.gold -= button.details.cost;
 			this.playerGoldText.text = 'Gold: ' + this.player.gold;
-			this.player.clickDmg++;
-			button.text.text = 'Attack: ' + this.player.clickDmg;
+			button.details.level++;
+			button.text.text = button.details.name + ': ' + button.details.level;
+			button.details.purchaseHandler.call(this, button, this.player);
 		}
 	}
 });
