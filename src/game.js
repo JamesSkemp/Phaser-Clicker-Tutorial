@@ -134,11 +134,21 @@ game.state.add('play', {
 		this.currentMonster.position.set(this.game.world.centerX + 100, this.game.world.centerY);
 		*/
 	},
-	onKilledMonster: function () {
+	onKilledMonster: function (monster) {
+		// Move the monster off screen.
+		monster.position.set(1500, this.game.world.centerY);
 
+		// Get a new monster.
+		this.currentMonster = this.monsters.getRandom();
+		// Start them off fully healed.
+		this.currentMonster.revive(this.currentMonster.maxHealth);
 	},
-	onRevivedMonster: function () {
-
+	onRevivedMonster: function (monster) {
+		// Move it into the world.
+		monster.position.set(this.game.world.centerX + 100, this.game.world.centerY);
+		// Update the text display.
+		this.monsterNameText.text = monster.details.name;
+		this.monsterHealthText.text = monster.health + ' HP';
 	}
 });
 
