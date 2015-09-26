@@ -87,6 +87,11 @@ game.state.add('play', {
 		*/
 	},
 	render: function () {
+		game.debug.text(
+			this.currentMonster.details.name,
+			this.game.world.centerX - this.currentMonster.width / 2,
+			this.game.world.centerY + this.currentMonster.height / 2);
+		
 		//game.debug.text('Adventure Awaits!', 250, 250);
 	},
 	
