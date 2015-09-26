@@ -49,6 +49,7 @@ game.state.add('play', {
 		this.game.cache.addBitmapData('button', buttonImage);
 
 		this.game.load.image('dagger', 'assets/496_RPG_icons/W_Dagger002.png');
+		this.game.load.image('swordIcon1', 'assets/496_RPG_icons/S_Sword15.png');
 	},
 
 	create: function () {
@@ -111,7 +112,9 @@ game.state.add('play', {
 			// Current damage per click.
 			clickDmg: 1,
 			// Current amount of gold.
-			gold: 0
+			gold: 0,
+			// Automatic damage per second.
+			dps: 0
 		};
 
 		this.monsterInfoUI = this.game.add.group();
@@ -169,16 +172,31 @@ game.state.add('play', {
 		var upgradeButtons = this.upgradePanel.addChild(this.game.add.group());
 		upgradeButtons.position.setTo(8, 8);
 
+		var upgradeButtonsData = [
+			{
+				icon: 'dagger', name: 'Attack', level: 1, cost: 5, purchaseHandler: function (button, player) {
+					player.clickDmg += 1;
+				}
+			},
+			{
+				icon: 'swordIcon1', name: 'Auto-Attack', level: 0, cost: 25, purchaseHandler: function (button, player) {
+					player.dps += 5;
+				}
+			}
+		];
+
 		// Create a button to upgrade the player's click damage.
 		var button;
-		button = this.game.add.button(0, 0, this.game.cache.getBitmapData('button'));
-		button.icon = button.addChild(this.game.add.image(6, 6, 'dagger'));
-		button.text = button.addChild(this.game.add.text(42, 6, 'Attack: ' + this.player.clickDmg, { font: '16px Arial Black' }));
-		button.details = { cost: 5 };
-		button.costText = button.addChild(this.game.add.text(42, 24, 'Cost: ' + button.details.cost, { font: '16px Arial Black' }));
-		button.events.onInputDown.add(this.onUpgradeButtonClick, this);
-		// Add the button to the collection of upgrade buttons.
-		upgradeButtons.addChild(button);
+		upgradeButtonsData.forEach(function (buttonData, index) {
+			button = state.game.add.button(0, 50 * index, state.game.cache.getBitmapData('button'));
+			button.icon = button.addChild(state.game.add.image(6, 6, buttonData.icon));
+			button.text = button.addChild(state.game.add.text(42, 6, buttonData.name + ': ' + buttonData.level, { font: '16px Arial Black' }));
+			button.details = buttonData;
+			button.costText = button.addChild(state.game.add.text(42, 24, 'Cost: ' + buttonData.cost, { font: '16px Arial Black' }));
+			button.events.onInputDown.add(state.onUpgradeButtonClick, this);
+			// Add the button to the collection of upgrade buttons.
+			upgradeButtons.addChild(button);
+		});
 
 		/*
 		// Location of the image, and in this case the frame to use (zero-based as usual).
