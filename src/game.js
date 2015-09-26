@@ -198,8 +198,8 @@ game.state.add('play', {
 			upgradeButtons.addChild(button);
 		});
 
-		// Check to see if damage should be applied automatically. Runs every 100ms.
-		this.dpsTimer = this.game.time.events.loop(100, this.onDPS, this);
+		// Check to see if damage should be applied automatically. Runs every 100 ms.
+		this.dpsTimer = this.game.time.events.loop(Phaser.Timer.SECOND / 10, this.onDPS, this);
 
 		/*
 		// Location of the image, and in this case the frame to use (zero-based as usual).
