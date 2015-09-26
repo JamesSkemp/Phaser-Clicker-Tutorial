@@ -5,10 +5,10 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO);
 game.state.add('play', {
 	preload: function () {
 		// Load in the images for our background.
-		game.load.image('forest-back', 'assets/parallax_forest_pack/layers/parallax-forest-back-trees.png');
-		game.load.image('forest-lights', 'assets/parallax_forest_pack/layers/parallax-forest-lights.png');
-		game.load.image('forest-middle', 'assets/parallax_forest_pack/layers/parallax-forest-middle-trees.png');
-		game.load.image('forest-front', 'assets/parallax_forest_pack/layers/parallax-forest-front-trees.png');
+		this.game.load.image('forest-back', 'assets/parallax_forest_pack/layers/parallax-forest-back-trees.png');
+		this.game.load.image('forest-lights', 'assets/parallax_forest_pack/layers/parallax-forest-lights.png');
+		this.game.load.image('forest-middle', 'assets/parallax_forest_pack/layers/parallax-forest-middle-trees.png');
+		this.game.load.image('forest-front', 'assets/parallax_forest_pack/layers/parallax-forest-front-trees.png');
 
 		// Sizes are the width and height of an individual image, and how many frames there are.
 		this.game.load.spritesheet('aerocephal', 'assets/allacrost_enemy_sprites/aerocephal.png', 768 / 4, 192, 4);
@@ -198,6 +198,9 @@ game.state.add('play', {
 			upgradeButtons.addChild(button);
 		});
 
+		// Check to see if damage should be applied automatically. Runs every 100ms.
+		this.dpsTimer = this.game.time.events.loop(100, this.onDPS, this);
+
 		/*
 		// Location of the image, and in this case the frame to use (zero-based as usual).
 		var skeletonSprite = game.add.sprite(450, 290, 'skeleton', 0);
@@ -283,6 +286,17 @@ game.state.add('play', {
 			button.details.level++;
 			button.text.text = button.details.name + ': ' + button.details.level;
 			button.details.purchaseHandler.call(this, button, this.player);
+		}
+	},
+	
+	onDPS: function () {
+		if (this.player.dps > 0) {
+			if (this.currentMonster && this.currentMonster.alive) {
+				var dmg = this.player.dps / 10;
+				this.currentMonster.damage(dmg);
+				// Update the health text, but round it.
+				this.monsterHealthText.text = this.currentMonster.alive ? Math.round(this.currentMonster.health) + ' HP' : 'DEAD';
+			}
 		}
 	}
 });
