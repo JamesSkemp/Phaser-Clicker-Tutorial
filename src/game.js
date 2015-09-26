@@ -205,6 +205,20 @@ game.state.add('play', {
 			upgradeButtons.addChild(button);
 		});
 
+		// Display the current world level.
+		this.levelUI = this.game.add.group();
+		this.levelUI.position.setTo(this.game.world.centerX, 30);
+		this.levelText = this.levelUI.addChild(this.game.add.text(0, 0, 'Level: ' + this.level, {
+			font: '24px Arial Black',
+			fill: '#fff',
+			strokeThickness: 4
+		}));
+		this.levelKillsText = this.levelUI.addChild(this.game.add.text(0, 30, 'Kills: ' + this.levelKills + '/' + this.levelKillsRequired, {
+			font: '24px Arial Black',
+			fill: '#fff',
+			strokeThickness: 4
+		}));
+
 		// Check to see if damage should be applied automatically. Runs every 100 ms.
 		this.dpsTimer = this.game.time.events.loop(Phaser.Timer.SECOND / 10, this.onDPS, this);
 
@@ -266,7 +280,10 @@ game.state.add('play', {
 		if (this.levelKills >= this.levelKillsRequired) {
 			this.level++;
 			this.levelKills = 0;
+			this.levelText.text = 'Level: ' + this.level;
 		}
+
+		this.levelKillsText.text = 'Kills: ' + this.levelKills + '/' + this.levelKillsRequired;
 
 		// Get a new monster.
 		this.currentMonster = this.monsters.getRandom();
