@@ -30,6 +30,23 @@ game.state.add('play', {
 		this.game.load.spritesheet('stygian_lizard', 'assets/allacrost_enemy_sprites/stygian_lizard.png', 768 / 4, 192, 4);
 
 		this.game.load.image('gold_coin', 'assets/496_RPG_icons/I_GoldCoin.png');
+
+		// Upgrades panel.
+		var bmd = this.game.add.bitmapData(250, 500);
+		bmd.ctx.fillStyle = '#9a783d';
+		bmd.ctx.strokeStyle = '#35371c';
+		bmd.ctx.lineWidth = 12;
+		bmd.ctx.fillRect(0, 0, 250, 500);
+		bmd.ctx.strokeRect(0, 0, 250, 500);
+		this.game.cache.addBitmapData('upgradePanel', bmd);
+
+		var buttonImage = this.game.add.bitmapData(476, 48);
+		buttonImage.ctx.fillStyle = '#e6dec7';
+		buttonImage.ctx.strokeStyle = '#35371c';
+		buttonImage.ctx.lineWidth = 4;
+		buttonImage.ctx.fillRect(0, 0, 225, 48);
+		buttonImage.ctx.strokeRect(0, 0, 225, 48);
+		this.game.cache.addBitmapData('button', buttonImage);
 	},
 
 	create: function () {
@@ -145,6 +162,10 @@ game.state.add('play', {
 			fill: '#fff',
 			strokeThickness: 4
 		});
+
+		this.upgradePanel = this.game.add.image(10, 70, this.game.cache.getBitmapData('upgradePanel'));
+		var upgradeButtons = this.upgradePanel.addChild(this.game.add.group());
+		upgradeButtons.position.setTo(8, 8);
 
 		/*
 		// Location of the image, and in this case the frame to use (zero-based as usual).
