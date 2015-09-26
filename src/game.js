@@ -79,13 +79,15 @@ game.state.add('play', {
 		this.currentMonster = this.monsters.getRandom();
 		this.currentMonster.position.set(this.game.world.centerX + 100, this.game.world.centerY);
 
+		/*
 		// Location of the image, and in this case the frame to use (zero-based as usual).
 		var skeletonSprite = game.add.sprite(450, 290, 'skeleton', 0);
 		// Set the rotation point to the center of the image, instead of the top left (0, 0).
 		skeletonSprite.anchor.setTo(0.5, 0.5);
+		*/
 	},
 	render: function () {
-		game.debug.text('Adventure Awaits!', 250, 250);
+		//game.debug.text('Adventure Awaits!', 250, 250);
 	},
 	
 	onClickMonster: function () {
