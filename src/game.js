@@ -295,11 +295,17 @@ game.state.add('play', {
 	},
 
 	onUpgradeButtonClick: function (button, pointer) {
-		if (this.player.gold - button.details.cost >= 0) {
-			this.player.gold -= button.details.cost;
+		// This functionality is here so it's updated after purchases.
+		function getAdjustedCost() {
+			return Math.ceil(button.details.cost + (button.details.level * 1.46));
+		}
+
+		if (this.player.gold - getAdjustedCost() >= 0) {
+			this.player.gold -= getAdjustedCost();
 			this.playerGoldText.text = 'Gold: ' + this.player.gold;
 			button.details.level++;
 			button.text.text = button.details.name + ': ' + button.details.level;
+			button.costText.text = 'Cost: ' + getAdjustedCost();
 			button.details.purchaseHandler.call(this, button, this.player);
 		}
 	},
