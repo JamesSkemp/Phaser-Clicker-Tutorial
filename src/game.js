@@ -92,6 +92,19 @@ game.state.add('play', {
 			gold: 0
 		};
 
+		this.monsterInfoUI = this.game.add.group();
+		this.monsterInfoUI.position.setTo(this.currentMonster.x - 220, this.currentMonster.y + 120);
+		this.monsterNameText = this.monsterInfoUI.addChild(this.game.add.text(0, 0, this.currentMonster.details.name, {
+			font: '48px Arial Black',
+			fill: '#fff',
+			strokeThickness: 4
+		}));
+		this.monsterHealthText = this.monsterInfoUI.addChild(this.game.add.text(0, 80, this.currentMonster.health + ' HP', {
+			font: '32px Arial Black',
+			fill: '#f00',
+			strokeThickness: 4
+		}));
+
 		/*
 		// Location of the image, and in this case the frame to use (zero-based as usual).
 		var skeletonSprite = game.add.sprite(450, 290, 'skeleton', 0);
@@ -100,17 +113,19 @@ game.state.add('play', {
 		*/
 	},
 	render: function () {
+		/*
 		game.debug.text(
 			this.currentMonster.details.name,
 			this.game.world.centerX - this.currentMonster.width / 2,
 			this.game.world.centerY + this.currentMonster.height / 2);
-		
+		*/
 		//game.debug.text('Adventure Awaits!', 250, 250);
 	},
 	
 	onClickMonster: function (monster, pointer) {
 		// Apply click damage to the monster.
 		this.currentMonster.damage(this.player.clickDmg);
+		this.monsterHealthText.text = this.currentMonster.alive ? this.currentMonster.health + ' HP' : 'DEAD';
 		/*
 		// Reset the current monster before we move him.
 		this.currentMonster.position.set(1500, this.game.world.centerY);
