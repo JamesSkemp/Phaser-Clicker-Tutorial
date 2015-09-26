@@ -196,6 +196,8 @@ game.state.add('play', {
 		coin = this.coins.getFirstExists(false);
 		coin.reset(this.game.world.centerX + this.game.rnd.integerInRange(-100, 100), this.game.world.centerY);
 		coin.goldValue = 1;
+		// Automatically collect the coin after 3 seconds.
+		this.game.time.events.add(Phaser.Timer.SECOND * 3, this.onClickCoin, this, coin);
 
 		// Get a new monster.
 		this.currentMonster = this.monsters.getRandom();
@@ -212,6 +214,10 @@ game.state.add('play', {
 	},
 
 	onClickCoin: function (coin) {
+		// Make sure it's still alive. This may be an issue if we try to automatically collect a coin that has been clicked on.
+		if (!coin.alive) {
+			return;
+		}
 		// Give the player the gold.
 		this.player.gold += coin.goldValue;
 		this.playerGoldText.text = 'Gold: ' + this.player.gold;
