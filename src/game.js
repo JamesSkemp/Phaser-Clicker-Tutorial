@@ -47,6 +47,8 @@ game.state.add('play', {
 		buttonImage.ctx.fillRect(0, 0, 225, 48);
 		buttonImage.ctx.strokeRect(0, 0, 225, 48);
 		this.game.cache.addBitmapData('button', buttonImage);
+
+		this.game.load.image('dagger', 'assets/496_RPG_icons/W_Dagger002.png');
 	},
 
 	create: function () {
@@ -167,6 +169,17 @@ game.state.add('play', {
 		var upgradeButtons = this.upgradePanel.addChild(this.game.add.group());
 		upgradeButtons.position.setTo(8, 8);
 
+		// Create a button to upgrade the player's click damage.
+		var button;
+		button = this.game.add.button(0, 0, this.game.cache.getBitmapData('button'));
+		button.icon = button.addChild(this.game.add.image(6, 6, 'dagger'));
+		button.text = button.addChild(this.game.add.text(42, 6, 'Attack: ' + this.player.clickDmg, { font: '16px Arial Black' }));
+		button.details = { cost: 5 };
+		button.costText = button.addChild(this.game.add.text(42, 24, 'Cost: ' + button.details.cost, { font: '16px Arial Black' }));
+		button.events.onInputDown.add(this.onUpgradeButtonClick, this);
+		// Add the button to the collection of upgrade buttons.
+		upgradeButtons.addChild(button);
+
 		/*
 		// Location of the image, and in this case the frame to use (zero-based as usual).
 		var skeletonSprite = game.add.sprite(450, 290, 'skeleton', 0);
@@ -243,6 +256,15 @@ game.state.add('play', {
 		this.player.gold += coin.goldValue;
 		this.playerGoldText.text = 'Gold: ' + this.player.gold;
 		coin.kill();
+	},
+
+	onUpgradeButtonClick: function (button, pointer) {
+		if (this.player.gold - button.details.cost >= 0) {
+			this.player.gold -= button.details.cost;
+			this.playerGoldText.text = 'Gold: ' + this.player.gold;
+			this.player.clickDmg++;
+			button.text.text = 'Attack: ' + this.player.clickDmg;
+		}
 	}
 });
 
