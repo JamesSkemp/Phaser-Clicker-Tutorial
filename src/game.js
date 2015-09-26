@@ -112,7 +112,7 @@ game.state.add('play', {
 			// Current damage per click.
 			clickDmg: 1,
 			// Current amount of gold.
-			gold: 0,
+			gold: 50,
 			// Automatic damage per second.
 			dps: 0
 		};
@@ -124,7 +124,7 @@ game.state.add('play', {
 			fill: '#fff',
 			strokeThickness: 4
 		}));
-		this.monsterHealthText = this.monsterInfoUI.addChild(this.game.add.text(0, 80, this.currentMonster.health + ' HP', {
+		this.monsterHealthText = this.monsterInfoUI.addChild(this.game.add.text(0, 80, Math.round(this.currentMonster.health) + ' HP', {
 			font: '32px Arial Black',
 			fill: '#f00',
 			strokeThickness: 4
@@ -232,7 +232,7 @@ game.state.add('play', {
 			dmgText.tween.start();
 		}
 
-		this.monsterHealthText.text = this.currentMonster.alive ? this.currentMonster.health + ' HP' : 'DEAD';
+		this.monsterHealthText.text = this.currentMonster.alive ? Math.round(this.currentMonster.health) + ' HP' : 'DEAD';
 		/*
 		// Reset the current monster before we move him.
 		this.currentMonster.position.set(1500, this.game.world.centerY);
