@@ -41,6 +41,44 @@ game.state.add('play', {
 				bg.tileScale.setTo(4, 4);
 			});
 
+		var monsterData = [
+			{ name: 'Aerocephal', image: 'aerocephal' },
+			{ name: 'Arcana Drake', image: 'arcana_drake' },
+			{ name: 'Aurum Drakueli', image: 'aurum-drakueli' },
+			{ name: 'Bat', image: 'bat' },
+			{ name: 'Daemarbora', image: 'daemarbora' },
+			{ name: 'Deceleon', image: 'deceleon' },
+			{ name: 'Demonic Essence', image: 'demonic_essence' },
+			{ name: 'Dune Crawler', image: 'dune_crawler' },
+			{ name: 'Green Slime', image: 'green_slime' },
+			{ name: 'Nagaruda', image: 'nagaruda' },
+			{ name: 'Rat', image: 'rat' },
+			{ name: 'Scorpion', image: 'scorpion' },
+			{ name: 'Scorpion Goliath', image: 'scorpion_goliath' },
+			{ name: 'Skeleton', image: 'skeleton' },
+			{ name: 'Snake', image: 'snake' },
+			{ name: 'Spider', image: 'spider' },
+			{ name: 'Stygian Lizard', image: 'stygian_lizard' }
+		];
+
+		this.monsters = this.game.add.group();
+
+		var monster;
+		monsterData.forEach(function (data) {
+			// Create a sprite for them off scrren.
+			monster = state.monsters.create(1000, state.game.world.centerY, data.image);
+			// Center sprite anchor.
+			monster.anchor.setTo(0.5);
+			// Reference to the data.
+			monster.details = data;
+			// Enable clicking.
+			monster.inputEnabled = true;
+			monster.events.onInputDown.add(state.onClickMonster, state);
+		});
+
+		this.currentMonster = this.monsters.getRandom();
+		this.currentMonster.position.set(this.game.world.centerX + 100, this.game.world.centerY);
+
 		// Location of the image, and in this case the frame to use (zero-based as usual).
 		var skeletonSprite = game.add.sprite(450, 290, 'skeleton', 0);
 		// Set the rotation point to the center of the image, instead of the top left (0, 0).
@@ -48,6 +86,14 @@ game.state.add('play', {
 	},
 	render: function () {
 		game.debug.text('Adventure Awaits!', 250, 250);
+	},
+	
+	onClickMonster: function () {
+		// Reset the current monster before we move him.
+		this.currentMonster.position.set(1000, this.game.world.centerY);
+		// Get another random monster.
+		this.currentMonster = this.monsters.getRandom();
+		this.currentMonster.position.set(this.game.world.centerX + 100, this.game.world.centerY);
 	}
 });
 
