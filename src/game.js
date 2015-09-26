@@ -28,6 +28,8 @@ game.state.add('play', {
 		this.game.load.spritesheet('snake', 'assets/allacrost_enemy_sprites/snake.png', 512 / 4, 64, 4);
 		this.game.load.spritesheet('spider', 'assets/allacrost_enemy_sprites/spider.png', 256 / 4, 64, 4);
 		this.game.load.spritesheet('stygian_lizard', 'assets/allacrost_enemy_sprites/stygian_lizard.png', 768 / 4, 192, 4);
+
+		this.game.load.image('gold_coin', 'assets/496_RPG_icons/I_GoldCoin.png');
 	},
 
 	create: function () {
@@ -130,6 +132,20 @@ game.state.add('play', {
 			this.dmgTextPool.add(dmgText);
 		}
 
+		// Create a pool of gold coins, since we want the player to collect them.
+		this.coins = this.add.group();
+		this.coins.createMultiple(50, 'gold_coin', '', false);
+		this.coins.setAll('inputEnabled', true);
+		this.coins.setAll('goldValue', 1);
+		// Add an event to all coins so they can be collected.
+		this.coins.callAll('events.onInputDown.add', 'events.onInputDown', this.onClickCoin, this);
+
+		this.playerGoldText = this.add.text(30, 30, 'Gold: ' + this.player.gold, {
+			font: '24px Arial Black',
+			fill: '#fff',
+			strokeThickness: 4
+		});
+
 		/*
 		// Location of the image, and in this case the frame to use (zero-based as usual).
 		var skeletonSprite = game.add.sprite(450, 290, 'skeleton', 0);
@@ -170,21 +186,36 @@ game.state.add('play', {
 		this.currentMonster.position.set(this.game.world.centerX + 100, this.game.world.centerY);
 		*/
 	},
+
 	onKilledMonster: function (monster) {
 		// Move the monster off screen.
 		monster.position.set(1500, this.game.world.centerY);
+
+		var coin;
+		// Spawn a coin.
+		coin = this.coins.getFirstExists(false);
+		coin.reset(this.game.world.centerX + this.game.rnd.integerInRange(-100, 100), this.game.world.centerY);
+		coin.goldValue = 1;
 
 		// Get a new monster.
 		this.currentMonster = this.monsters.getRandom();
 		// Start them off fully healed.
 		this.currentMonster.revive(this.currentMonster.maxHealth);
 	},
+
 	onRevivedMonster: function (monster) {
 		// Move it into the world.
 		monster.position.set(this.game.world.centerX + 100, this.game.world.centerY);
 		// Update the text display.
 		this.monsterNameText.text = monster.details.name;
 		this.monsterHealthText.text = monster.health + ' HP';
+	},
+
+	onClickCoin: function (coin) {
+		// Give the player the gold.
+		this.player.gold += coin.goldValue;
+		this.playerGoldText.text = 'Gold: ' + this.player.gold;
+		coin.kill();
 	}
 });
 
