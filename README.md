@@ -1,3 +1,5 @@
+**Note:** This repo is no longer maintained. See https://github.com/JamesSkemp/PhaserTutorials for the current version of this, as well other Phaser tutorials.
+
 # Phaser Clicker Tutorial
 Phaser application based upon [Ben Sparks' tutorial](http://gamedevacademy.org/phaser-tutorial-how-to-create-an-idle-clicker-game/).
 
